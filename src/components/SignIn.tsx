@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { FirebaseError } from '@firebase/util';
 import { mapAuthCodeToMessage } from '../utils/firebase-auth-errors'
 import { Alert } from '@mui/material';
+import { GoogleSignInButton } from './googleSignInButton';
 
 const SignIn = () => {
     const [email, setEmail] = useState("")
@@ -57,6 +58,7 @@ const SignIn = () => {
         {isSignUp ? 'Sign Up' : 'Sign In'}
         </Typography>
         {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
+        <Box>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
                 margin="normal"
@@ -88,6 +90,10 @@ const SignIn = () => {
             >
                 Sign In
             </Button>
+        </Box>
+        <Box sx={{ mt: 1, mb: 2 }}>
+        <GoogleSignInButton />
+        </Box>
         </Box>
         <Grid container>
                 <Grid item>
