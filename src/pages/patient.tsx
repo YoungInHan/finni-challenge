@@ -4,8 +4,8 @@ import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import Profile from '../components/Profile';
-import EditPatient from '../components/EditPatient';
+import Profile from '../patients/Profile';
+import EditPatient from '../patients/EditPatient';
 
 const PatientPage = ({ edit }: any) => {
   return (

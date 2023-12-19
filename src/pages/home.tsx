@@ -1,18 +1,16 @@
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Link from '@mui/joy/Link';
-import Typography from '@mui/joy/Typography';
-
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-
-import Sidebar from '../components/Sidebar';
-import OrderTable from '../components/OrderTable';
-import Header from '../components/Header';
 import AddIcon from '@mui/icons-material/Add';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import Box from '@mui/joy/Box';
+import Breadcrumbs from '@mui/joy/Breadcrumbs';
+import Button from '@mui/joy/Button';
+import CssBaseline from '@mui/joy/CssBaseline';
+import Link from '@mui/joy/Link';
+import { CssVarsProvider } from '@mui/joy/styles';
+import Typography from '@mui/joy/Typography';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import OrderTable from '../home/OrderTable';
 
 export default function Home() {
   return (

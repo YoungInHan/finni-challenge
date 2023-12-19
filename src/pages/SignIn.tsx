@@ -14,7 +14,7 @@ import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import GoogleIcon from '../components/GoogleIcon';
+import GoogleIcon from '../icons/GoogleIcon';
 import ColorSchemeToggle from '../components/ColorSchemeToggle';
 import { auth, googleProvider } from '../config/firebase';
 import {

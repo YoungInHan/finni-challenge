@@ -1,41 +1,36 @@
-import * as React from 'react';
-import { ColorPaletteProp } from '@mui/joy/styles';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Chip from '@mui/joy/Chip';
 import Divider from '@mui/joy/Divider';
+import Dropdown from '@mui/joy/Dropdown';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
-import Link from '@mui/joy/Link';
-import Input from '@mui/joy/Input';
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import ModalClose from '@mui/joy/ModalClose';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-import Table from '@mui/joy/Table';
-import Sheet from '@mui/joy/Sheet';
-import Checkbox from '@mui/joy/Checkbox';
 import IconButton, { iconButtonClasses } from '@mui/joy/IconButton';
-import Typography from '@mui/joy/Typography';
+import Input from '@mui/joy/Input';
+import Link from '@mui/joy/Link';
 import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
-import Dropdown from '@mui/joy/Dropdown';
-
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import SearchIcon from '@mui/icons-material/Search';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import BlockIcon from '@mui/icons-material/Block';
-import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-import { useState, useEffect } from 'react';
-import { and, collection, getDocs, or, orderBy, query, where} from 'firebase/firestore'
-import { auth, db } from '../config/firebase'
+import Modal from '@mui/joy/Modal';
+import ModalClose from '@mui/joy/ModalClose';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
+import Sheet from '@mui/joy/Sheet';
+import { ColorPaletteProp } from '@mui/joy/styles';
+import Table from '@mui/joy/Table';
+import Typography from '@mui/joy/Typography';
+import { and, collection, getDocs, or, query, where } from 'firebase/firestore';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { auth, db } from '../config/firebase';
 
 function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
@@ -63,27 +58,25 @@ type Order = 'asc' | 'desc';
 
 function getComparator<Key extends keyof any>(
   order: Order,
-  orderBy: Key,
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
-) => number {
+  orderBy: Key
+): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function RowMenu({rowid}:any) {
+function RowMenu({ rowid }: any) {
   return (
     <Dropdown>
       <MenuButton
         slots={{ root: IconButton }}
-        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}
-      >
+        slotProps={{ root: { variant: 'plain', color: 'neutral', size: 'sm' } }}>
         <MoreHorizRoundedIcon />
       </MenuButton>
       <Menu size="sm" sx={{ minWidth: 140 }}>
-        <MenuItem component={"a"} href={`/patient/${rowid}`}>Edit</MenuItem>
+        <MenuItem component={'a'} href={`/patient/${rowid}`}>
+          Edit
+        </MenuItem>
         <Divider />
         <MenuItem color="danger">Delete</MenuItem>
       </Menu>
@@ -93,56 +86,63 @@ function RowMenu({rowid}:any) {
 
 export default function OrderTable() {
   const [order, setOrder] = React.useState<Order>('desc');
-  const [orderKey, setOrderKey] = useState('name')
+  const [orderKey, setOrderKey] = useState('name');
   const [open, setOpen] = React.useState(false);
-  const [data, setData] = useState<any []>([])
-  const [searchText, setSearchText] = useState("")
-  const [refetch, setRefetch] = useState(false)
-  const [statusFilter, setStatusFilter] = useState("")
-  
+  const [data, setData] = useState<any[]>([]);
+  const [searchText, setSearchText] = useState('');
+  const [refetch, setRefetch] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('');
+
   useEffect(() => {
-      const fetchData = async () => {
-        const queryConstraints = []
-        queryConstraints.push(where("userId", "==", auth?.currentUser?.uid))
-        if (statusFilter) {
-          queryConstraints.push(where("status", "==", statusFilter))
-        }
-        if (searchText) {
-          const textarr = searchText.split(' ')
-          queryConstraints.push(or(where('firstName', "in", textarr), where('lastName', "in", textarr)))
-        }
-        const q = query(collection(db, 'patients'), and(...queryConstraints))
-        const querySnapshot = await getDocs(q)
-        const newData: any[] = []
-        querySnapshot.forEach((doc) => {
-            const d = doc.data()
-            console.log(doc.data().addresses)
-            newData.push({
-                name: `${d.firstName} ${d.lastName}`,
-                initials: `${d.firstName[0]}${d.lastName[0]}`,
-                status: d.status,
-                phoneNumber: d.phoneNumber,
-                dateOfBirth: d.dateOfBirth,
-                // dateOfBirth: d.date_of_birth.toDate().toLocaleDateString('en-us', { year:"numeric", month:"short",day:"numeric"}),
-                patientId: doc.id,
-                updatedAt: d.updatedAt.toDate().toLocaleDateString('en-us', { year:"numeric", month:"short",day:"numeric"}),
-                updatedAtVal: d.updatedAt.toDate().getTime(),
-                email: d.email,
-                address: d.addresses && d.addresses.length > 0 ? `${d.addresses[0].addressLine1}, ${d.addresses[0].city}, ${d.addresses[0].state},` : ''
-            })
-        })
-        setData(newData)
-        setRefetch(false)
+    const fetchData = async () => {
+      const queryConstraints = [];
+      queryConstraints.push(where('userId', '==', auth?.currentUser?.uid));
+      if (statusFilter) {
+        queryConstraints.push(where('status', '==', statusFilter));
       }
-      fetchData()
-  }, [statusFilter, refetch])
+      if (searchText) {
+        const textarr = searchText.split(' ');
+        queryConstraints.push(
+          or(where('firstName', 'in', textarr), where('lastName', 'in', textarr))
+        );
+      }
+      const q = query(collection(db, 'patients'), and(...queryConstraints));
+      const querySnapshot = await getDocs(q);
+      const newData: any[] = [];
+      querySnapshot.forEach((doc) => {
+        const d = doc.data();
+        console.log(doc.data().addresses);
+        newData.push({
+          name: `${d.firstName} ${d.lastName}`,
+          initials: `${d.firstName[0]}${d.lastName[0]}`,
+          status: d.status,
+          phoneNumber: d.phoneNumber,
+          dateOfBirth: d.dateOfBirth,
+          // dateOfBirth: d.date_of_birth.toDate().toLocaleDateString('en-us', { year:"numeric", month:"short",day:"numeric"}),
+          patientId: doc.id,
+          updatedAt: d.updatedAt
+            .toDate()
+            .toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }),
+          updatedAtVal: d.updatedAt.toDate().getTime(),
+          email: d.email,
+          address:
+            d.addresses && d.addresses.length > 0
+              ? `${d.addresses[0].addressLine1}, ${d.addresses[0].city}, ${d.addresses[0].state},`
+              : ''
+        });
+      });
+      setData(newData);
+      setRefetch(false);
+    };
+    fetchData();
+  }, [statusFilter, refetch]);
   const handleStatusFilterChange = (
     event: React.SyntheticEvent | null,
-    newValue: string | null,
+    newValue: string | null
   ) => {
-    setStatusFilter(newValue ? newValue : "")
+    setStatusFilter(newValue ? newValue : '');
   };
-          console.log(data) 
+  console.log(data);
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
@@ -151,8 +151,7 @@ export default function OrderTable() {
           size="sm"
           placeholder="Filter by status"
           slotProps={{ button: { sx: { whiteSpace: 'nowrap' } } }}
-          onChange={handleStatusFilterChange}
-        >
+          onChange={handleStatusFilterChange}>
           <Option value="Inquiry">Inquiry</Option>
           <Option value="Onboarding">Onboarding</Option>
           <Option value="Active">Active</Option>
@@ -168,23 +167,19 @@ export default function OrderTable() {
         sx={{
           display: { xs: 'flex', sm: 'none' },
           my: 1,
-          gap: 1,
-        }}
-      >
+          gap: 1
+        }}>
         <Input
           size="sm"
           // placeholder="Search"
           startDecorator={<SearchIcon />}
           sx={{ flexGrow: 1 }}
-          onChange={(e) => { setSearchText(e.target.value)}}
+          onChange={(e) => {
+            setSearchText(e.target.value);
+          }}
           endDecorator={<Button>hi</Button>}
         />
-        <IconButton
-          size="sm"
-          variant="outlined"
-          color="neutral"
-          onClick={() => setOpen(true)}
-        >
+        <IconButton size="sm" variant="outlined" color="neutral" onClick={() => setOpen(true)}>
           <FilterAltIcon />
         </IconButton>
         <Modal open={open} onClose={() => setOpen(false)}>
@@ -212,20 +207,25 @@ export default function OrderTable() {
           flexWrap: 'wrap',
           gap: 1.5,
           '& > *': {
-            minWidth: { xs: '120px', md: '160px' },
-          },
-        }}
-      >
+            minWidth: { xs: '120px', md: '160px' }
+          }
+        }}>
         <FormControl sx={{ flex: 1 }} size="sm">
           <FormLabel>Search for Patient</FormLabel>
-          <Input size="sm" placeholder="Search" startDecorator={<SearchIcon />} 
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setSearchText(e.target.value)}}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              setRefetch(true)
-              e.preventDefault();
-            }
-          }}/>
+          <Input
+            size="sm"
+            placeholder="Search"
+            startDecorator={<SearchIcon />}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSearchText(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setRefetch(true);
+                e.preventDefault();
+              }
+            }}
+          />
         </FormControl>
         {renderFilters()}
       </Box>
@@ -238,9 +238,8 @@ export default function OrderTable() {
           borderRadius: 'sm',
           flexShrink: 1,
           overflow: 'auto',
-          minHeight: 0,
-        }}
-      >
+          minHeight: 0
+        }}>
         <Table
           aria-labelledby="tableTitle"
           stickyHeader
@@ -250,9 +249,8 @@ export default function OrderTable() {
             '--Table-headerUnderlineThickness': '1px',
             '--TableRow-hoverBackground': 'var(--joy-palette-background-level1)',
             '--TableCell-paddingY': '4px',
-            '--TableCell-paddingX': '8px',
-          }}
-        >
+            '--TableCell-paddingX': '8px'
+          }}>
           <thead>
             <tr>
               <th style={{ width: 240, padding: '12px 6px' }}>
@@ -262,20 +260,18 @@ export default function OrderTable() {
                   component="button"
                   onClick={() => {
                     if (orderKey !== 'name') {
-                      setOrderKey('name')
+                      setOrderKey('name');
                     }
-                    setOrder(order === 'asc' ? 'desc' : 'asc')
+                    setOrder(order === 'asc' ? 'desc' : 'asc');
                   }}
                   fontWeight="lg"
                   endDecorator={<ArrowDropDownIcon />}
                   sx={{
                     '& svg': {
                       transition: '0.2s',
-                      transform:
-                        order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)',
-                    },
-                  }}
-                >
+                      transform: order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)'
+                    }
+                  }}>
                   Patient
                 </Link>
               </th>
@@ -286,20 +282,18 @@ export default function OrderTable() {
                   component="button"
                   onClick={() => {
                     if (orderKey !== 'status') {
-                      setOrderKey('status')
+                      setOrderKey('status');
                     }
-                    setOrder(order === 'asc' ? 'desc' : 'asc')
+                    setOrder(order === 'asc' ? 'desc' : 'asc');
                   }}
                   fontWeight="lg"
                   endDecorator={<ArrowDropDownIcon />}
                   sx={{
                     '& svg': {
                       transition: '0.2s',
-                      transform:
-                        order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)',
-                    },
-                  }}
-                >
+                      transform: order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)'
+                    }
+                  }}>
                   Status
                 </Link>
               </th>
@@ -313,20 +307,18 @@ export default function OrderTable() {
                   component="button"
                   onClick={() => {
                     if (orderKey !== 'updatedAtVal') {
-                      setOrderKey('updatedAtVal')
+                      setOrderKey('updatedAtVal');
                     }
-                    setOrder(order === 'asc' ? 'desc' : 'asc')
+                    setOrder(order === 'asc' ? 'desc' : 'asc');
                   }}
                   fontWeight="lg"
                   endDecorator={<ArrowDropDownIcon />}
                   sx={{
                     '& svg': {
                       transition: '0.2s',
-                      transform:
-                        order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)',
-                    },
-                  }}
-                >
+                      transform: order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)'
+                    }
+                  }}>
                   Last Updated
                 </Link>
               </th>
@@ -334,9 +326,9 @@ export default function OrderTable() {
             </tr>
           </thead>
           <tbody>
-            {stableSort(data, getComparator(order, orderKey)).map((row:any) => (
+            {stableSort(data, getComparator(order, orderKey)).map((row: any) => (
               <tr key={row.id}>
-                  <td>
+                <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <Avatar size="sm">{row.initials}</Avatar>
                     <div>
@@ -350,14 +342,13 @@ export default function OrderTable() {
                     variant="soft"
                     size="sm"
                     color={
-                      { 
+                      {
                         Active: 'success',
                         Inquiry: 'warning',
                         Onboarding: 'primary',
                         Churned: 'neutral'
                       }[row.status as string] as ColorPaletteProp
-                    }
-                  >
+                    }>
                     {row.status}
                   </Chip>
                 </td>
@@ -391,26 +382,23 @@ export default function OrderTable() {
           [`& .${iconButtonClasses.root}`]: { borderRadius: '50%' },
           display: {
             xs: 'none',
-            md: 'flex',
-          },
-        }}
-      >
+            md: 'flex'
+          }
+        }}>
         <Button
           size="sm"
           variant="outlined"
           color="neutral"
-          startDecorator={<KeyboardArrowLeftIcon />}
-        >
+          startDecorator={<KeyboardArrowLeftIcon />}>
           Previous
         </Button>
 
         <Button
-        sx={{ marginLeft: "auto" }}
+          sx={{ marginLeft: 'auto' }}
           size="sm"
           variant="outlined"
           color="neutral"
-          endDecorator={<KeyboardArrowRightIcon />}
-        >
+          endDecorator={<KeyboardArrowRightIcon />}>
           Next
         </Button>
       </Box>
