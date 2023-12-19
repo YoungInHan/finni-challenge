@@ -7,7 +7,7 @@ import Header from '../components/Header';
 import Profile from '../components/Profile';
 import EditPatient from '../components/EditPatient';
 
-export default function JoyOrderDashboardTemplate({edit}: any) {
+const PatientPage = ({ edit }: any) => {
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
@@ -26,12 +26,13 @@ export default function JoyOrderDashboardTemplate({edit}: any) {
             minWidth: 0,
             height: '100dvh',
             gap: 1,
-            overflow: 'auto',
-          }}
-        >
-          {edit ? <EditPatient/> : <Profile/>}
+            overflow: 'auto'
+          }}>
+          {edit ? <EditPatient /> : <Profile />}
         </Box>
       </Box>
     </CssVarsProvider>
   );
-}
+};
+
+export default PatientPage;

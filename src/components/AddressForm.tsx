@@ -44,7 +44,7 @@ export default function AddressForm({fetchedAddresses, onChangeAddressFields}: a
         <Stack spacing={2}>
             {console.log('render!')}
         {addresses.map((address: any, index: number) => (
-            <FormControl sx={{ flexGrow: 1 }}>
+            <FormControl sx={{ flexGrow: 1 }} key={index}>
                 <Stack spacing={1} useFlexGap>
                     <Stack direction="row" spacing={2} useFlexGap>
                 <FormLabel>{`Address ${index + 1}`}</FormLabel>

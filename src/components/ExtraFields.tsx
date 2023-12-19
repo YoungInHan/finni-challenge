@@ -47,7 +47,7 @@ export default function ExtraFields({fetchedFields, onSubmitExtraFields}: any) {
           <Stack spacing={2} sx={{ my: 1 }}>
               
         {extraFields.map(({id, key, value, type}: any) => (
-            <FormControl  sx={{ flexGrow: 1 }}>
+            <FormControl  sx={{ flexGrow: 1 }} key={id}>
             <Stack direction="row" spacing={2} useFlexGap>
             <Input
               size="sm"

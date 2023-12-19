@@ -3,12 +3,12 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth"
 import { getFirestore } from "@firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBFAFBsHmxdbfVmDybKWt5iI8qnun2wJcM",
-  authDomain: "finni-project.firebaseapp.com",
-  projectId: "finni-project",
-  storageBucket: "finni-project.appspot.com",
-  messagingSenderId: "115396778540",
-  appId: "1:115396778540:web:8fec9ebaa4a9db137dcf89"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID
 };
 
 export const app = initializeApp(firebaseConfig);
