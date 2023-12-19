@@ -25,6 +25,7 @@ import { useParams } from 'react-router-dom';
 import { db } from '../config/firebase';
 import AddressForm from './AddressForm';
 import ExtraFields from './ExtraFields';
+import Notes from './Notes';
 
 export default function EditPatient() {
   const [patientData, setPatientData] = useState({
@@ -38,6 +39,7 @@ export default function EditPatient() {
   });
   const [extraFields, setExtraFields] = useState<any[]>([]);
   const [addressArr, setAddressArr] = useState<any[]>([]);
+  const [notesArr, setNotesArr] = useState<any[]>([]);
 
   const id = String(useParams().id);
   useEffect(() => {
@@ -72,6 +74,13 @@ export default function EditPatient() {
         type: 'text'
       }));
       setExtraFields(extraFieldsArr);
+
+      const notesParse = d.notes ? d.notes : [];
+      const notesList = notesParse.map((note: any, i: any) => ({
+        date: note.date.toDate(),
+        text: note.text
+      }));
+      setNotesArr(notesList);
     };
     fetchData();
   }, [id]);
@@ -107,6 +116,20 @@ export default function EditPatient() {
     const data = {
       updatedAt: currentDate,
       extraFields: updateObj
+    };
+    try {
+      await updateDoc(docRef, data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const onSubmitNotes = async (notes: any) => {
+    console.log(notes);
+    const docRef = doc(db, 'patients', id);
+    const currentDate = new Date();
+    const data = {
+      updatedAt: currentDate,
+      notes
     };
     try {
       await updateDoc(docRef, data);
@@ -267,6 +290,7 @@ export default function EditPatient() {
           fetchedFields={extraFields}
           onSubmitExtraFields={onSubmitExtraFields}
         />
+        <Notes key={notesArr} fetchedNotes={notesArr} onSubmitNotes={onSubmitNotes} />
       </Stack>
     </Box>
   );

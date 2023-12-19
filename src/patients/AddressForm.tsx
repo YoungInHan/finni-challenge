@@ -20,7 +20,6 @@ export default function AddressForm({ fetchedAddresses, onChangeAddressFields }:
 
   return (
     <Stack spacing={2}>
-      {console.log('render!')}
       {addresses.map((address: any, index: number) => (
         <FormControl sx={{ flexGrow: 1 }} key={index}>
           <Stack spacing={1} useFlexGap>
