@@ -117,8 +117,9 @@ export default function OrderTable() {
           initials: `${d.firstName[0]}${d.lastName[0]}`,
           status: d.status,
           phoneNumber: d.phoneNumber,
-          dateOfBirth: d.dateOfBirth,
-          // dateOfBirth: d.date_of_birth.toDate().toLocaleDateString('en-us', { year:"numeric", month:"short",day:"numeric"}),
+          dateOfBirth: d.dateOfBirth
+            .toDate()
+            .toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }),
           patientId: doc.id,
           updatedAt: d.updatedAt
             .toDate()

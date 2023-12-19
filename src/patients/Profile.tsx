@@ -1,5 +1,4 @@
 import { addDoc, collection } from '@firebase/firestore';
-import { CalendarToday } from '@mui/icons-material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
@@ -46,6 +45,7 @@ export default function MyProfile() {
     const currentDate = new Date();
     const data = {
       ...patientData,
+      dateOfBirth: new Date(patientData.dateOfBirth),
       userId: auth?.currentUser?.uid,
       createdAt: currentDate,
       updatedAt: currentDate,
@@ -170,7 +170,7 @@ export default function MyProfile() {
                   <FormLabel>Phone</FormLabel>
                   <Input
                     size="sm"
-                    type="email"
+                    type="tel"
                     startDecorator={<PhoneIcon />}
                     placeholder="Phone"
                     defaultValue=""
@@ -180,13 +180,9 @@ export default function MyProfile() {
                     }
                   />
                 </FormControl>
-                {/* <FormControl>
-                  <FormLabel>Date of Birth</FormLabel>
-                  <JoyDatePicker />
-                </FormControl> */}
               </Stack>
               <div>
-                <FormControl sx={{ flexGrow: 1 }}>
+                {/* <FormControl sx={{ flexGrow: 1 }}>
                   <FormLabel>Date of Birth</FormLabel>
                   <Input
                     size="sm"
@@ -199,6 +195,15 @@ export default function MyProfile() {
                       setPatientData({ ...patientData, dateOfBirth: e.target.value })
                     }
                   />
+                </FormControl> */}
+                <FormControl>
+                  <FormLabel>Date of Birth</FormLabel>
+                  <Input
+                    size="sm"
+                    onChange={(e) =>
+                      setPatientData({ ...patientData, dateOfBirth: e.target.value })
+                    }
+                    type="date"></Input>
                 </FormControl>
               </div>
               <div>

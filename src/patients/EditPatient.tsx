@@ -1,5 +1,4 @@
 import { updateDoc } from '@firebase/firestore';
-import { CalendarToday } from '@mui/icons-material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
@@ -57,7 +56,7 @@ export default function EditPatient() {
         status: d.status,
         email: d.email,
         phoneNumber: d.phoneNumber,
-        dateOfBirth: d.dateOfBirth
+        dateOfBirth: d.dateOfBirth.toDate().toISOString().slice(0, 10)
       });
       const addressParse = d.addresses ? d.addresses : [];
       const addressList = addressParse.map((address: any, i: any) => ({
@@ -82,6 +81,7 @@ export default function EditPatient() {
     const currentDate = new Date();
     const data = {
       ...patientData,
+      dateOfBirth: new Date(patientData.dateOfBirth),
       updatedAt: currentDate,
       addresses: addressArr.map((address) => ({ id, ...address }))
     };
@@ -231,25 +231,17 @@ export default function EditPatient() {
                     }
                   />
                 </FormControl>
-                {/* <FormControl>
-                  <FormLabel>Date of Birth</FormLabel>
-                  <JoyDatePicker />
-                </FormControl> */}
               </Stack>
               <div>
-                <FormControl sx={{ flexGrow: 1 }}>
+                <FormControl>
                   <FormLabel>Date of Birth</FormLabel>
                   <Input
                     size="sm"
-                    type="email"
-                    startDecorator={<CalendarToday />}
-                    placeholder="Date of Birth"
                     value={patientData.dateOfBirth}
-                    sx={{ flexGrow: 1 }}
                     onChange={(e) =>
                       setPatientData({ ...patientData, dateOfBirth: e.target.value })
                     }
-                  />
+                    type="date"></Input>
                 </FormControl>
               </div>
               <div>
