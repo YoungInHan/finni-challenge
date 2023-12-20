@@ -33,7 +33,10 @@ import { useEffect, useState } from 'react';
 import { auth, db } from '../config/firebase';
 import { getComparator, stableSort } from '../utils/table';
 
-function RowMenu({ rowid }: any) {
+interface RowMenuProps {
+  rowid: string;
+}
+function RowMenu({ rowid }: RowMenuProps) {
   return (
     <Dropdown>
       <MenuButton
@@ -55,13 +58,13 @@ function RowMenu({ rowid }: any) {
 type Order = 'asc' | 'desc';
 
 export default function OrderTable() {
-  const [order, setOrder] = React.useState<Order>('desc');
-  const [orderKey, setOrderKey] = useState('name');
-  const [open, setOpen] = React.useState(false);
+  const [order, setOrder] = useState<Order>('desc');
+  const [orderKey, setOrderKey] = useState<string>('name');
+  const [open, setOpen] = useState<boolean>(false);
   const [data, setData] = useState<any[]>([]);
-  const [searchText, setSearchText] = useState('');
-  const [refetch, setRefetch] = useState(false);
-  const [statusFilter, setStatusFilter] = useState('');
+  const [searchText, setSearchText] = useState<string>('');
+  const [refetch, setRefetch] = useState<boolean>(false);
+  const [statusFilter, setStatusFilter] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -296,7 +299,7 @@ export default function OrderTable() {
             </tr>
           </thead>
           <tbody>
-            {stableSort(data, getComparator(order, orderKey)).map((row: any) => (
+            {stableSort([...data], getComparator(order, orderKey)).map((row: any) => (
               <tr key={row.id}>
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>

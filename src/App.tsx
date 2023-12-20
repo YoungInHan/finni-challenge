@@ -1,8 +1,7 @@
 import { onAuthStateChanged, User } from '@firebase/auth';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { ProtectedRoute } from './auth/protectedRoute';
-import { UserBlockedRoute } from './auth/userBlockedRoute';
+import { ProtectedRoute, UserBlockedRoute } from './auth/protectedRoute';
 import { auth } from './config/firebase';
 import Home from './pages/Home';
 import PatientPage from './pages/Patient';

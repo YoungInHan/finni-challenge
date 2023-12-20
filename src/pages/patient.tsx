@@ -7,7 +7,11 @@ import Sidebar from '../components/Sidebar';
 import EditPatient from '../patients/EditPatient';
 import NewPatient from '../patients/NewPatient';
 
-const PatientPage = ({ edit }: any) => {
+interface PatientPageProps {
+  edit: boolean;
+}
+
+const PatientPage = ({ edit }: PatientPageProps) => {
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
