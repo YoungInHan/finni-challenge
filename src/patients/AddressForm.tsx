@@ -8,12 +8,7 @@ import { useEffect, useState } from 'react';
 
 export default function AddressForm({ fetchedAddresses, onChangeAddressFields }: any) {
   const [addresses, setAddresses] = useState(fetchedAddresses);
-
   const [nextID, setNextID] = useState(addresses.length);
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   onSubmitExtraFields(extraFields)
-  // }
   useEffect(() => {
     onChangeAddressFields(addresses);
   }, [addresses, onChangeAddressFields]);

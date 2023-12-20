@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
-import { auth } from './config/firebase';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { onAuthStateChanged, User } from '@firebase/auth';
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './auth/protectedRoute';
 import { UserBlockedRoute } from './auth/userBlockedRoute';
-import Home from './pages/home';
+import { auth } from './config/firebase';
+import Home from './pages/Home';
+import PatientPage from './pages/Patient';
 import SignInPage from './pages/SignIn';
-import PatientPage from './pages/patient';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);

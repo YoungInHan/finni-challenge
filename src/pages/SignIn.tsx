@@ -1,32 +1,32 @@
-import * as React from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
-import GlobalStyles from '@mui/joy/GlobalStyles';
-import CssBaseline from '@mui/joy/CssBaseline';
+import { FirebaseError } from '@firebase/util';
+import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import Alert from '@mui/joy/Alert';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Checkbox from '@mui/joy/Checkbox';
+import CssBaseline from '@mui/joy/CssBaseline';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel, { formLabelClasses } from '@mui/joy/FormLabel';
-import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
-import Link from '@mui/joy/Link';
+import GlobalStyles from '@mui/joy/GlobalStyles';
+import IconButton from '@mui/joy/IconButton';
 import Input from '@mui/joy/Input';
-import Typography from '@mui/joy/Typography';
+import Link from '@mui/joy/Link';
 import Stack from '@mui/joy/Stack';
-import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import GoogleIcon from '../icons/GoogleIcon';
-import ColorSchemeToggle from '../components/ColorSchemeToggle';
-import { auth, googleProvider } from '../config/firebase';
+import { CssVarsProvider } from '@mui/joy/styles';
+import Typography from '@mui/joy/Typography';
 import {
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup
 } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import * as React from 'react';
 import { useState } from 'react';
-import { browserSessionPersistence } from 'firebase/auth';
-import { FirebaseError } from '@firebase/util';
-import Alert from '@mui/joy/Alert';
+import { useNavigate } from 'react-router-dom';
+import ColorSchemeToggle from '../components/ColorSchemeToggle';
+import { auth, googleProvider } from '../config/firebase';
+import GoogleIcon from '../icons/GoogleIcon';
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -146,13 +146,22 @@ const SignInPage = ({ isSignUp }: { isSignUp: boolean }) => {
             }}>
             <Stack gap={4} sx={{ mb: 2 }}>
               <Stack gap={1}>
-                <Typography level="h3">{isSignUp ? 'Sign Up' : 'Sign in'}</Typography>
-                <Typography level="body-sm">
-                  New to company?{' '}
-                  <Link href="/auth/signup" level="title-sm">
-                    Sign up!
-                  </Link>
-                </Typography>
+                <Typography level="h3">{isSignUp ? 'Sign Up' : 'Sign In'}</Typography>
+                {isSignUp ? (
+                  <Typography level="body-sm">
+                    Already have an account?{' '}
+                    <Link href="/auth/login" level="title-sm">
+                      Sign in!
+                    </Link>
+                  </Typography>
+                ) : (
+                  <Typography level="body-sm">
+                    New to company?{' '}
+                    <Link href="/auth/signup" level="title-sm">
+                      Sign up!
+                    </Link>
+                  </Typography>
+                )}
               </Stack>
               <Button
                 variant="soft"
@@ -200,12 +209,9 @@ const SignInPage = ({ isSignUp }: { isSignUp: boolean }) => {
                       alignItems: 'center'
                     }}>
                     <Checkbox size="sm" label="Remember me" name="persistent" />
-                    <Link level="title-sm" href="#replace-with-a-link">
-                      Forgot your password?
-                    </Link>
                   </Box>
                   <Button type="submit" fullWidth>
-                    Sign in
+                    {isSignUp ? 'Sign Up' : 'Sign In'}
                   </Button>
                 </Stack>
               </form>

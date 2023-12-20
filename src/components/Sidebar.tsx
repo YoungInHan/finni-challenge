@@ -104,9 +104,6 @@ export default function Sidebar() {
         onClick={() => closeSidebar()}
       />
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-        {/* <IconButton variant="soft" color="primary" size="sm">
-          <BrightnessAutoRoundedIcon />
-        </IconButton> */}
         <Typography level="title-lg">Some Title</Typography>
         <ColorSchemeToggle sx={{ ml: 'auto' }} />
       </Box>

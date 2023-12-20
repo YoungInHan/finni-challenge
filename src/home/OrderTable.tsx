@@ -31,39 +31,7 @@ import { and, collection, getDocs, or, query, where } from 'firebase/firestore';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { auth, db } from '../config/firebase';
-
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = 'asc' | 'desc';
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
+import { getComparator, stableSort } from '../utils/table';
 
 function RowMenu({ rowid }: any) {
   return (
@@ -83,6 +51,8 @@ function RowMenu({ rowid }: any) {
     </Dropdown>
   );
 }
+
+type Order = 'asc' | 'desc';
 
 export default function OrderTable() {
   const [order, setOrder] = React.useState<Order>('desc');
@@ -136,12 +106,14 @@ export default function OrderTable() {
     };
     fetchData();
   }, [statusFilter, refetch]);
+
   const handleStatusFilterChange = (
     event: React.SyntheticEvent | null,
     newValue: string | null
   ) => {
     setStatusFilter(newValue ? newValue : '');
   };
+
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
@@ -170,7 +142,6 @@ export default function OrderTable() {
         }}>
         <Input
           size="sm"
-          // placeholder="Search"
           startDecorator={<SearchIcon />}
           sx={{ flexGrow: 1 }}
           onChange={(e) => {

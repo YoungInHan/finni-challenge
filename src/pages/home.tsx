@@ -74,7 +74,6 @@ export default function Home() {
             </Button>
           </Box>
           <OrderTable />
-          {/* <OrderList /> */}
         </Box>
       </Box>
     </CssVarsProvider>
