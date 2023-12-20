@@ -1,9 +1,8 @@
-import * as React from 'react';
-import { useColorScheme } from '@mui/joy/styles';
-import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
-
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import IconButton, { IconButtonProps } from '@mui/joy/IconButton';
+import { useColorScheme } from '@mui/joy/styles';
+import * as React from 'react';
 
 export default function ColorSchemeToggle(props: IconButtonProps) {
   const { onClick, sx, ...other } = props;
@@ -13,16 +12,7 @@ export default function ColorSchemeToggle(props: IconButtonProps) {
     setMounted(true);
   }, []);
   if (!mounted) {
-    return (
-      <IconButton
-        size="sm"
-        variant="outlined"
-        color="neutral"
-        {...other}
-        sx={sx}
-        disabled
-      />
-    );
+    return <IconButton size="sm" variant="outlined" color="neutral" {...other} sx={sx} disabled />;
   }
   return (
     <IconButton
@@ -42,15 +32,14 @@ export default function ColorSchemeToggle(props: IconButtonProps) {
       sx={[
         {
           '& > *:first-child': {
-            display: mode === 'dark' ? 'none' : 'initial',
+            display: mode === 'dark' ? 'none' : 'initial'
           },
           '& > *:last-child': {
-            display: mode === 'light' ? 'none' : 'initial',
-          },
+            display: mode === 'light' ? 'none' : 'initial'
+          }
         },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-    >
+        ...(Array.isArray(sx) ? sx : [sx])
+      ]}>
       <DarkModeRoundedIcon />
       <LightModeIcon />
     </IconButton>

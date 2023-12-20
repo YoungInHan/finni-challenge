@@ -46,14 +46,6 @@ export default function Home() {
               <Link underline="none" color="neutral" href="#some-link" aria-label="Home">
                 <HomeRoundedIcon />
               </Link>
-              <Link
-                underline="hover"
-                color="neutral"
-                href="#some-link"
-                fontSize={12}
-                fontWeight={500}>
-                Dashboard
-              </Link>
               <Typography color="primary" fontWeight={500} fontSize={12}>
                 Patients
               </Typography>

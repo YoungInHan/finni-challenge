@@ -21,10 +21,11 @@ import Typography from '@mui/joy/Typography';
 import * as React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import TextMaskAdapter from '../components/PhoneInputeMask';
 import { auth, db } from '../config/firebase';
 import AddressForm from './AddressForm';
 
-export default function MyProfile() {
+export default function newPatient() {
   const [patientData, setPatientData] = useState({
     firstName: '',
     middleName: '',
@@ -41,7 +42,6 @@ export default function MyProfile() {
   const patientCollectionRef = collection(db, 'patients');
 
   const createPatient = async () => {
-    console.log(patientData);
     const currentDate = new Date();
     const data = {
       ...patientData,
@@ -59,13 +59,6 @@ export default function MyProfile() {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(event);
-  };
-  const onSubmitExtraFields = async (extraFields: any) => {
-    console.log('parent', extraFields);
-  };
   const handleStatusChange = (event: React.SyntheticEvent | null, newValue: string | null) => {
     setPatientData({ ...patientData, status: newValue ? newValue : '' });
   };
@@ -90,20 +83,15 @@ export default function MyProfile() {
             <Link underline="none" color="neutral" href="#some-link" aria-label="Home">
               <HomeRoundedIcon />
             </Link>
-            <Link
-              underline="hover"
-              color="neutral"
-              href="#some-link"
-              fontSize={12}
-              fontWeight={500}>
-              Users
+            <Link underline="hover" color="neutral" href="/" fontSize={12} fontWeight={500}>
+              Patients
             </Link>
             <Typography color="primary" fontWeight={500} fontSize={12}>
-              My profile
+              New Patient
             </Typography>
           </Breadcrumbs>
           <Typography level="h2" component="h1" sx={{ mt: 1, mb: 2 }}>
-            My profile
+            New Patient
           </Typography>
         </Box>
       </Box>
@@ -170,32 +158,17 @@ export default function MyProfile() {
                   <FormLabel>Phone</FormLabel>
                   <Input
                     size="sm"
-                    type="tel"
-                    startDecorator={<PhoneIcon />}
                     placeholder="Phone"
-                    defaultValue=""
+                    startDecorator={<PhoneIcon />}
                     sx={{ flexGrow: 1 }}
                     onChange={(e) =>
                       setPatientData({ ...patientData, phoneNumber: e.target.value })
                     }
+                    slotProps={{ input: { component: TextMaskAdapter } }}
                   />
                 </FormControl>
               </Stack>
               <div>
-                {/* <FormControl sx={{ flexGrow: 1 }}>
-                  <FormLabel>Date of Birth</FormLabel>
-                  <Input
-                    size="sm"
-                    type="email"
-                    startDecorator={<CalendarToday />}
-                    placeholder="Date of Birth"
-                    defaultValue=""
-                    sx={{ flexGrow: 1 }}
-                    onChange={(e) =>
-                      setPatientData({ ...patientData, dateOfBirth: e.target.value })
-                    }
-                  />
-                </FormControl> */}
                 <FormControl>
                   <FormLabel>Date of Birth</FormLabel>
                   <Input

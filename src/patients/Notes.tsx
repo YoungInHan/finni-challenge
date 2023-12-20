@@ -43,7 +43,6 @@ export default function Notes({ fetchedNotes, onSubmitNotes }: any) {
                       (a: any, b: any) => b.date - a.date
                     )
                   );
-                  console.log(notes.sort((a: any, b: any) => b.date - a.date));
                 }}>
                 <EditNote />
               </IconButton>

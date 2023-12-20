@@ -22,6 +22,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import TextMaskAdapter from '../components/PhoneInputeMask';
 import { db } from '../config/firebase';
 import AddressForm from './AddressForm';
 import ExtraFields from './ExtraFields';
@@ -37,7 +38,7 @@ export default function EditPatient() {
     phoneNumber: '',
     dateOfBirth: ''
   });
-  const [extraFields, setExtraFields] = useState<any[]>([]);
+  const [extraFields, setExtraFields] = useState<any[] | null>(null);
   const [addressArr, setAddressArr] = useState<any[]>([]);
   const [notesArr, setNotesArr] = useState<any[]>([]);
 
@@ -46,7 +47,6 @@ export default function EditPatient() {
     const fetchData = async () => {
       const docRef = doc(db, 'patients', id);
       const data = await getDoc(docRef);
-      console.log('here2', data.data());
       const d = data.data();
       if (!d) {
         return;
@@ -94,17 +94,11 @@ export default function EditPatient() {
       updatedAt: currentDate,
       addresses: addressArr.map((address) => ({ id, ...address }))
     };
-    console.log(data);
     try {
       await updateDoc(docRef, data);
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log(event);
   };
   const onSubmitExtraFields = async (updatedFields: any) => {
     const updateObj = updatedFields.reduce(
@@ -124,7 +118,6 @@ export default function EditPatient() {
     }
   };
   const onSubmitNotes = async (notes: any) => {
-    console.log(notes);
     const docRef = doc(db, 'patients', id);
     const currentDate = new Date();
     const data = {
@@ -143,6 +136,7 @@ export default function EditPatient() {
   const onChangeAddressFields = (addresses: any) => {
     setAddressArr(addresses);
   };
+  console.log('hi', extraFields);
   return (
     <Box sx={{ flex: 1, width: '100%' }}>
       <Box
@@ -161,12 +155,7 @@ export default function EditPatient() {
             <Link underline="none" color="neutral" href="#some-link" aria-label="Home">
               <HomeRoundedIcon />
             </Link>
-            <Link
-              underline="hover"
-              color="neutral"
-              href="#some-link"
-              fontSize={12}
-              fontWeight={500}>
+            <Link underline="hover" color="neutral" href="/" fontSize={12} fontWeight={500}>
               Patients
             </Link>
             <Typography color="primary" fontWeight={500} fontSize={12}>
@@ -244,14 +233,14 @@ export default function EditPatient() {
                   <FormLabel>Phone</FormLabel>
                   <Input
                     size="sm"
-                    type="email"
-                    startDecorator={<PhoneIcon />}
                     placeholder="Phone"
+                    startDecorator={<PhoneIcon />}
                     value={patientData.phoneNumber}
                     sx={{ flexGrow: 1 }}
                     onChange={(e) =>
                       setPatientData({ ...patientData, phoneNumber: e.target.value })
                     }
+                    slotProps={{ input: { component: TextMaskAdapter } }}
                   />
                 </FormControl>
               </Stack>
@@ -285,11 +274,13 @@ export default function EditPatient() {
             </CardActions>
           </CardOverflow>
         </Card>
-        <ExtraFields
-          key={extraFields}
-          fetchedFields={extraFields}
-          onSubmitExtraFields={onSubmitExtraFields}
-        />
+        {extraFields !== null && (
+          <ExtraFields
+            key={extraFields}
+            fetchedFields={extraFields}
+            onSubmitExtraFields={onSubmitExtraFields}
+          />
+        )}
         <Notes key={notesArr} fetchedNotes={notesArr} onSubmitNotes={onSubmitNotes} />
       </Stack>
     </Box>

@@ -1,4 +1,6 @@
+import { Add } from '@mui/icons-material';
 import ClearIcon from '@mui/icons-material/Clear';
+import { IconButton, Tooltip } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
@@ -24,9 +26,26 @@ export default function ExtraFields({ fetchedFields, onSubmitExtraFields }: any)
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        <Box sx={{ mb: 1 }}>
-          <Typography level="title-md">Extra Fields</Typography>
-        </Box>
+        <Stack direction="row" sx={{ mb: 1 }} justifyContent="space-between">
+          <Box>
+            <Typography level="title-md">Extra Fields</Typography>
+          </Box>
+          <Stack justifyContent="flex-end">
+            <Tooltip title="New Field">
+              <IconButton
+                size="sm"
+                onClick={() => {
+                  setExtraFields([
+                    ...extraFields,
+                    { id: nextID + 1, key: '', value: '', type: 'text' }
+                  ]);
+                  setNextID(nextID + 1);
+                }}>
+                <Add />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        </Stack>
         <Divider />
         <Stack spacing={2} sx={{ my: 1 }}>
           {extraFields.map(({ id, key, value, type }: any) => (
@@ -67,19 +86,6 @@ export default function ExtraFields({ fetchedFields, onSubmitExtraFields }: any)
         </Stack>
         <CardOverflow sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
           <CardActions sx={{ pt: 2, alignSelf: 'flex-end' }}>
-            <Button
-              size="sm"
-              color="neutral"
-              onClick={() => {
-                setExtraFields([
-                  ...extraFields,
-                  { id: nextID + 1, key: '', value: '', type: 'text' }
-                ]);
-                setNextID(nextID + 1);
-              }}
-              variant="soft">
-              New Field
-            </Button>
             <Button type="submit" size="sm" variant="solid">
               Save
             </Button>

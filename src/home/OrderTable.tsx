@@ -111,7 +111,6 @@ export default function OrderTable() {
       const newData: any[] = [];
       querySnapshot.forEach((doc) => {
         const d = doc.data();
-        console.log(doc.data().addresses);
         newData.push({
           name: `${d.firstName} ${d.lastName}`,
           initials: `${d.firstName[0]}${d.lastName[0]}`,
@@ -143,7 +142,6 @@ export default function OrderTable() {
   ) => {
     setStatusFilter(newValue ? newValue : '');
   };
-  console.log(data);
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
@@ -323,7 +321,7 @@ export default function OrderTable() {
                   Last Updated
                 </Link>
               </th>
-              <th style={{ width: 140, padding: '12px 6px' }}> </th>
+              <th style={{ width: 80, padding: '12px 6px' }}> </th>
             </tr>
           </thead>
           <tbody>

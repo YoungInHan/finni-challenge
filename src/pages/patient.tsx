@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { CssVarsProvider } from '@mui/joy/styles';
-import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
-import Sidebar from '../components/Sidebar';
+import CssBaseline from '@mui/joy/CssBaseline';
+import { CssVarsProvider } from '@mui/joy/styles';
+import * as React from 'react';
 import Header from '../components/Header';
-import Profile from '../patients/Profile';
+import Sidebar from '../components/Sidebar';
 import EditPatient from '../patients/EditPatient';
+import NewPatient from '../patients/NewPatient';
 
 const PatientPage = ({ edit }: any) => {
   return (
@@ -28,7 +28,7 @@ const PatientPage = ({ edit }: any) => {
             gap: 1,
             overflow: 'auto'
           }}>
-          {edit ? <EditPatient /> : <Profile />}
+          {edit ? <EditPatient /> : <NewPatient />}
         </Box>
       </Box>
     </CssVarsProvider>
